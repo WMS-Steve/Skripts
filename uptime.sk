@@ -1,0 +1,25 @@
+variables:
+    {upmin} = 0
+    {upsec} = 0
+    {uphour} = 0
+every 1 second:
+    add 1 to {upsec}
+    if {upsec} is 60:
+        add 1 to {upmin}
+        set {upsec} to 0
+        if {upmin} is 60:
+            add 1 to {uphour}
+            set {upmin} to 0
+command 업타임:
+    trigger:
+        send "서버 업타임: %{uphour}%시간 %{upmin}%분 %{upsec}%초"
+on damage:
+    if name of attacker's tool is "&7&l[&2티어 I&f&l] &6&l성기사의 &f&l검":
+        draw 15 of dust_color_transition using dustTransition(blue, white, 3) at location above victim
+        draw 15 of dust_color_transition using dustTransition(blue, red, 3) at location above victim
+        play sound "ITEM.TRIDENT.THUNDER" with volume 1 at attacker
+    else if name of attacker's tool is "&7&l[&2티어 II&7&l] &6&l성기사의 &f&l검":
+        draw 30 of dust_color_transition using dustTransition(red, white, 3) at location of victim
+        draw 30 of dust_color_transition using dustTransition(white, red, 3) at location above victim
+        draw 20 of dust using dustOption(blue, 10) at location above victim
+        play sound "ITEM.TRIDENT.THUNDER" with volume 1 at attacker

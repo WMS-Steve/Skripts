@@ -1,0 +1,107 @@
+variables:
+    {cnt} = 0
+command chest [<string>] [<integer>]:
+	trigger:
+		if arg-1 and arg-2 is not set:
+			send "&c상자 종류를 입력 해 주세요."
+		if arg-1 is not set:
+			send "&c상자 종류를 입력 해 주세요."
+		else:
+			if arg-1 is "일반무기":
+				if arg-2 is not set:
+					give 1 chest named "&e일반 무기 상자" with lore "" and "&f확률" and "&e초급: 60%%" and "&a일반: 35%%" and "&b희귀: 5%%" to player
+				else:
+					set {_a} to arg-2
+					give {_a} of chest named "&e일반 무기 상자" with lore "" and "&f확률" and "&e초급: 60%%" and "&a일반: 35%%" and "&b희귀: 5%%" to player
+			if arg-1 is "희귀무기":
+				if arg-2 is not set:
+					give 1 chest named "&b희귀 무기 상자" with lore "" and "&f확률" and "&e초급: 20%%" and "&a일반: 60%%" and "&b희귀: 20%%" to player
+				else:
+					set {_a} to arg-2
+					give {_a} of chest named "&b희귀 무기 상자" with lore "" and "&f확률" and "&e초급: 20%%" and "&a일반: 60%%" and "&b희귀: 20%%" to player
+			if arg-1 is "전설무기":
+				if arg-2 is not set:
+					give 1 chest named "&4&l전설 무기 상자" with lore "" and "&f확률" and "&a일반: 20%%" and "&b희귀: 75%%" and "&4&l전설: 5%%" to player
+				else:
+					set {_a} to arg-2
+					give {_a} of chest named "&4&l전설 무기 상자" with lore "" and "&f확률" and "&a일반: 20%%" and "&b희귀: 75%%" and "&4&l전설: 5%%" to player
+					
+
+on place of chest:
+	if name of event-item is "&e일반 무기 상자":
+		cancel event
+		remove 1 chest from player's inventory
+		set {_ran} to random integer between 1 to 100
+		if {_ran} is between 1 and 60:
+			give 1 of stone sword to player
+			give 1 of chain helmet to player
+			give 1 of chain chestplate to player
+			give 1 of chain leggings to player
+			give 1 of chain boots to player
+			send "&e초급 아이템에 당첨되셨습니다."
+		else if {_ran} is between 61 and 95:
+			give 1 of shiny nether brick item named "&b철 검 교환권" to player
+			give 1 of shiny paper item named "&b철 투구 교환권" to player
+			give 1 of shiny paper item named "&b철 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b철 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b철 부츠 교환권" to player
+			send "&a일반 아이템에 당첨되셨습니다."
+		else if {_ran} is between 96 and 100:
+			give 1 of shiny nether brick item named "&e다이아몬드 검 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 투구 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 부츠 교환권" to player
+			send "&b희귀 아이템에 당첨되셨습니다."
+	if name of event-item is "&b희귀 무기 상자":
+		cancel event
+		remove 1 chest from player's inventory
+		set {_ran} to random integer between 1 to 100
+		if {_ran} is between 1 and 20:
+			give 1 of stone sword to player
+			give 1 of chain helmet to player
+			give 1 of chain chestplate to player
+			give 1 of chain leggings to player
+			give 1 of chain boots to player
+			send "&e초급 아이템에 당첨되셨습니다."
+		else if {_ran} is between 21 and 80:
+			give 1 of shiny nether brick item named "&b철 검 교환권" to player
+			give 1 of shiny paper item named "&b철 투구 교환권" to player
+			give 1 of shiny paper item named "&b철 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b철 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b철 부츠 교환권" to player
+			send "&a일반 아이템에 당첨되셨습니다."
+		else if {_ran} is between 81 and 100:
+			give 1 of shiny nether brick item named "&e다이아몬드 검 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 투구 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 부츠 교환권" to player
+			send "&b희귀 아이템에 당첨되셨습니다."
+	if name of event-item is "&4&l전설 무기 상자":
+		cancel event
+		remove 1 chest from player's inventory
+		set {_ran} to random integer between 1 to 100
+		if {_ran} is between 1 and 20:
+			give 1 of shiny nether brick item named "&b철 검 교환권" to player
+			give 1 of shiny paper item named "&b철 투구 교환권" to player
+			give 1 of shiny paper item named "&b철 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b철 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b철 부츠 교환권" to player
+			send "&a일반 아이템에 당첨되셨습니다."
+		else if {_ran} is between 21 and 95:
+			give 1 of shiny nether brick item named "&e다이아몬드 검 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 투구 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b다이아몬드 부츠 교환권" to player
+			send "&b희귀 아이템에 당첨되셨습니다."
+		else if {_ran} is between 96 and 100:
+			give 1 of shiny nether brick item named "&b네더라이트 검 교환권" to player
+			give 1 of shiny paper item named "&b네더라이트 투구 교환권" to player
+			give 1 of shiny paper item named "&b네더라이트 갑옷 교환권" to player
+			give 1 of shiny paper item named "&b네더라이트 레깅스 교환권" to player
+			give 1 of shiny paper item named "&b네더라이트 부츠 교환권" to player
+			send "&4&l전설 아이템에 당첨되셨습니다." to player
+			add 1 to {cnt}
+			broadcast "&e%player%&f님이 서버 &4&l%{cnt}%&f번째로 네더라이트 세트를 획득하셨습니다!"

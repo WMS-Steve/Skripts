@@ -1,0 +1,657 @@
+variables:
+    {%player%.스코어보드} = true
+command 돈 [<string>] [<player>] [<integer>]:
+    trigger:
+        if arg-3 is smaller than 0:
+            send "&f[&e&l돈&e 시스템&f] &c보낼 액수가 정확하지 않습니다. 다시 확인해주세요." to player
+        if arg-1 is "입금" or "dlqrma" or "송금" or "pay" or "보내기":
+            if arg-2 or arg-3 is not set:
+                send "&f[&e&l돈&e 시스템&f] &c명령어를 제대로 입력 하였는지 확인 해 주세요." to player
+            else:
+                if arg-3 is bigger than {%uuid of player%.money}:
+                    send "&f[&e&l돈&e 시스템&f] &c가진 액수보다 보낼 금액이 큽니다!" to player
+                else:
+                    add arg-3 to {%uuid of arg-2%.money}
+                    subtract arg-3 from {%uuid of player%.money}
+                    send "&f[&e&l돈&e 시스템&f] &a성공적으로 %arg-3%원을 %arg-2%에게 보냈습니다." to player
+                    send "&f[&e&l돈&e 시스템&f] &a%player%님이 당신에게 %arg-3%원을 보냈습니다." to arg-2
+        if arg-1 is not set:
+            send "&f[&e&l돈&e 시스템&f] &a현재 플레이어님의 돈은 %{%uuid of player%.money}%원 입니다." to player
+        else if arg-1 is "보기" or "qhrl" or "확인":
+            send "&f[&e&l돈&e 시스템&f] &a현재 플레이어님의 돈은 %{%uuid of player%.money}%원 입니다." to player
+        else if arg-1 is "설정":
+            if player is op:
+                set {%uuid of arg-2%.money} to arg-3
+                send "&f[&e&l돈&e 시스템&f] &a성공적으로 %arg-2%의 돈을 %arg-3%원으로 설정했습니다." to player
+        else if arg-1 is "차감":
+            if player is op:
+                subtract arg-3 from {%uuid of arg-2%.money}
+                send "&f[&e&l돈&e 시스템&f] &a성공적으로 %arg-2%의 돈을 %arg-3%원 줄였습니다." to player
+        else if arg-1 is "추가" or "증감":
+            if player is op:
+                add arg-3 to {%uuid of arg-2%.money}
+                send "&f[&e&l돈&e 시스템&f] &a성공적으로 %arg-2%의 돈을 %arg-3%원 늘렸습니다." to player
+                
+        else if arg-1 or arg-2 or arg-3 is not set:
+            send "&f[&e&l돈&e 시스템&f] &c명령어를 제대로 입력 하였는지 확인 해 주세요." to player
+        
+on join:
+    if {%uuid of player%.money} is not set:
+        set {%uuid of player%.money} to 0
+on rightclick on entity:
+    if name of event-entity is "&4비밀상점":
+        open chest inventory named "&4비밀상점" with 1 row to player
+        set slot 0 of current inventory of player to zombie head named "&a가짜 좀비 머리" with lore "&e가격 : 500000원"
+    if name of event-entity is "&e일반상점":
+        open chest inventory named "&e일반상점" with 6 rows to player
+        set {_slot} to 0
+        set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        loop 9 times:
+            add 1 to {_slot}
+            set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        set {_slot} to 9
+        loop 8 times:
+            add 9 to {_slot}
+            set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        set {_slot} to 45
+        loop 8 times:
+            add 1 to {_slot}
+            set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        set {_slot} to 17
+        set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        loop 8 times:
+            add 9 to {_slot}
+            set slot {_slot} of current inventory of player to orange stained glass pane named " "
+        set slot 10 of current inventory of player to zombie head named "&a&l진품 좀비 머리" with lore "&e가격: 100만원"
+        set slot 11 of current inventory of player to shiny emerald named "&e[&f판매전용&e] &2에메랄드" with lore "" and "&e판매가: 1250원" and "" and "&e64개 판매가: 8만원"
+        set slot 12 of current inventory of player to shiny diamond named "&e[&f판매전용&e] &b다이아몬드" with lore "" and "&e판매가: 1000원" and "" and "&e64개 판매가: 6만 4천원"
+        set slot 13 of current inventory of player to shiny gold ingot named "&e[&f판매전용&e] &6금괴" with lore "" and "&e판매가: 650원" and "" and "&e64개 판매가: 4만 1천 600원"
+        set slot 14 of current inventory of player to raw gold named "&6금 원석" with lore "&e가격: 600원"
+        set slot 15 of current inventory of player to shiny iron ingot named "&e[&f판매전용&e] &f철괴" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+        set slot 16 of current inventory of player to raw iron named "&f철 원석" with lore "&e가격: 500원"
+        set slot 19 of current inventory of player to shiny paper named "&e&l대량상점 이용권" with lore "" and "&e가격: 12만 5천원" and "" and "&e&l대량상점 이용 가능"
+        set slot 20 of current inventory of player to shiny copper ingot named "&e[&f판매전용&e] &6구리 주괴" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+        set slot 21 of current inventory of player to shiny coal named "&e[&f판매전용&e] &9석탄" with lore "" and "&e판매가: 125원" and "" and "&e64개 판매가: 8천원"
+        set slot 22 of current inventory of player to shiny diamond block named "&e[&f판매전용&e] &2아무 광물 블록 팔기" with lore "" and "&e판매가능 품목: &2에메랄드 블록, &b다이아몬드 블록, &6금 블록, &f철 블록, &6&l구리 블록, &9석탄 블록" and "" and "&e64개 판매가: ?원"
+        set slot 23 of current inventory of player to shiny wheat named "&e[&f판매전용&e] &6밀" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+        set slot 24 of current inventory of player to shiny potato named "&e[&f판매전용&e] &e감자" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+        set slot 25 of current inventory of player to shiny carrot named "&e[&f판매전용&e] &6당근" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200`원"
+        set slot 28 of current inventory of player to shiny melon slice named "&e[&f판매전용&e] &a수박 조각" with lore "" and "&e판매가: 200원" and "" and "&e64개 판매가: 3만 5천 200원"
+        set slot 29 of current inventory of player to shiny pumpkin named "&e[&f판매전용&e] &e호박" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+        set slot 30 of current inventory of player to shiny melon named "&e[&f판매전용&e] &a수박" with lore "" and "&e판매가: 825원" and "" and "&e64개 판매가: 5만 2천 800원"
+        set slot 31 of current inventory of player to shiny cocoa beans named "&e[&f판매전용&e] &6코코아 콩" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+        set slot 32 of current inventory of player to shiny cookie named "&e[&f판매전용&e] &6쿠키" with lore "" and "&e판매가: 2200원" and "" and "&e64개 판매가: 14만 800원"
+        set slot 49 of current inventory of player to ("MrSnowDK" parsed as offline player)'s skull named "&e플레이어님의 현재 돈 : &6%{%uuid of player%.money}%원"
+        set slot 52 of current inventory of player to ("MHF_ArrowRight" parsed as offline player)'s skull named "다음 페이지"
+    if name of event-entity is "&e&l대량상점":
+        if name of player's tool is "&e&l대량상점 이용권":
+            open chest inventory named "&e&l대량상점" with 6 rows to player
+            set {_slot} to 0
+            set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            loop 9 times:
+                add 1 to {_slot}
+                set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            set {_slot} to 9
+            loop 8 times:
+                add 9 to {_slot}
+                set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            set {_slot} to 45
+            loop 8 times:
+                add 1 to {_slot}
+                set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            set {_slot} to 17
+            set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            loop 8 times:
+                add 9 to {_slot}
+                set slot {_slot} of current inventory of player to purple stained glass pane named " "
+            set slot 10 of current inventory of player to shiny emerald named "&e[&f판매전용&e] &2에메랄드" with lore "" and "&e판매가: 1250원" and "" and "&e64개 판매가: 8만원"
+            set slot 11 of current inventory of player to shiny diamond named "&e[&f판매전용&e] &b다이아몬드" with lore "" and "&e판매가: 1000원" and "" and "&e64개 판매가: 6만 4천원"
+            set slot 12 of current inventory of player to shiny gold ingot named "&e[&f판매전용&e] &6금괴" with lore "" and "&e판매가: 650원" and "" and "&e64개 판매가: 4만 1천 600원"
+            set slot 13 of current inventory of player to raw gold named "&6금 원석" with lore "&e가격: 600원"
+            set slot 14 of current inventory of player to shiny iron ingot named "&e[&f판매전용&e] &f철괴" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+            set slot 15 of current inventory of player to raw iron named "&f철 원석" with lore "&e가격: 500원"
+            set slot 16 of current inventory of player to shiny copper ingot named "&e[&f판매전용&e] &6구리 주괴" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+            set slot 19 of current inventory of player to shiny coal named "&e[&f판매전용&e] &9석탄" with lore "" and "&e판매가: 125원" and "" and "&e64개 판매가: 8천원"
+            set slot 20 of current inventory of player to shiny diamond block named "&e[&f판매전용&e] &2아무 광물 블록 팔기" with lore "" and "&e판매가능 품목: &2에메랄드 블록, &b다이아몬드 블록, &6금 블록, &f철 블록, &6&l구리 블록, &9석탄 블록" and "" and "&e64개 판매가: ?원"
+            set slot 21 of current inventory of player to shiny wheat named "&e[&f판매전용&e] &6밀" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+            set slot 22 of current inventory of player to shiny potato named "&e[&f판매전용&e] &e감자" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+            set slot 23 of current inventory of player to shiny carrot named "&e[&f판매전용&e] &6당근" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200`원"
+            set slot 24 of current inventory of player to shiny melon slice named "&e[&f판매전용&e] &a수박 조각" with lore "" and "&e판매가: 200원" and "" and "&e64개 판매가: 3만 5천 200원"
+            set slot 25 of current inventory of player to shiny pumpkin named "&e[&f판매전용&e] &e호박" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+            set slot 28 of current inventory of player to shiny melon named "&e[&f판매전용&e] &a수박" with lore "" and "&e판매가: 825원" and "" and "&e64개 판매가: 5만 2천 800원"
+            set slot 29 of current inventory of player to shiny cocoa beans named "&e[&f판매전용&e] &6코코아 콩" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+            set slot 30 of current inventory of player to shiny cookie named "&e[&f판매전용&e] &6쿠키" with lore "" and "&e판매가: 2200원" and "" and "&e64개 판매가: 14만 800원"
+
+
+on inventory click:
+    if name of player's current inventory is "&4비밀상점":
+        cancel event
+        if clicked slot is 0:
+            if {%uuid of player%.money} is smaller than 500000:
+                close player's inventory
+                send "&c잔액이 부족합니다."
+            else:
+                subtract 500000 from {%uuid of player%.money}
+                play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                give 1 of zombie head named "&a가짜 좀비 머리" to player
+                send "&a구매가 성공적으로 완료 되었습니다. 구매 품목: &a가짜 좀비 머리"
+    else if name of player's current inventory is "&e일반상점":
+        cancel event
+        if {%player%.s} is not 1:
+            if clicked slot is 10:
+                if {%uuid of player%.money} is smaller than 1000000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 1000000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    close player's inventory
+                    give 1 of zombie head named "&a&l진품 좀비 머리" to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &a&l진품 좀비 머리"
+            if clicked slot is 11:
+                if player has 1 emerald:
+                    remove 1 emerald from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 1250 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c에메랄드가 없습니다!"
+            if clicked slot is 12:
+                if player has 1 diamond:
+                    remove 1 diamond from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 1000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c다이아몬드가 없습니다!"
+            if clicked slot is 13:
+                if player has 1 gold ingot:
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    remove 1 gold ingot from player's inventory
+                    add 650 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c금괴가 없습니다!"
+            if clicked slot is 14:
+                if {%uuid of player%.money} is smaller than 600:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 600 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 of raw gold to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &6금 원석"
+            if clicked slot is 15:
+                if player has 1 iron ingot:
+                    remove 1 iron ingot from player's inventory
+                    add 550 to {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c철괴가 없습니다!"
+            if clicked slot is 16:
+                if {%uuid of player%.money} is smaller than 500:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 500 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 of raw iron to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &f철 원석"
+            if clicked slot is 19:
+                if {%uuid of player%.money} is smaller than 125000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 125000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 of shiny paper named "&e&l대량상점 이용권" to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &e&l대량상점 이용권"
+            if clicked slot is 20:
+                if player has 1 copper ingot:
+                    remove 1 copper ingot from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 450 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c구리 주괴가 없습니다!"
+            if clicked slot is 21:
+                if player has 1 coal:
+                    remove 1 coal from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 125 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c석탄이 없습니다!"
+            if clicked slot is 22:
+                if player has 1 emerald block:
+                    remove 1 emerald block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 11500 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 diamond block:
+                    remove 1 diamond block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 9200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 gold block:
+                    remove 1 gold block from player's inventory
+                    add 5980 to {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 iron block:
+                    remove 1 iron block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 5060 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 copper block:
+                    remove 1 copper block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 4140 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 coal block:
+                    remove 1 coal block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 1150 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c광물 블록이 없습니다!"
+            if clicked slot is 23:
+                if player has 1 wheat:
+                    remove 1 wheat from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 750 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c밀이 없습니다!"
+            if clicked slot is 24:
+                if player has 1 potato:
+                    remove 1 potato from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 450 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c감자가 없습니다!"
+            if clicked slot is 25:
+                if player has 1 carrot:
+                    remove 1 carrot from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 550 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c당근이 없습니다!"
+            if clicked slot is 28:
+                if player has 1 melon slice:
+                    remove 1 melon slice from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c수박조각이 없습니다!"
+            if clicked slot is 29:
+                if player has 1 pumpkin:
+                    remove 1 pumpkin from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 750 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c호박이 없습니다!"
+            if clicked slot is 30:
+                if player has 1 melon:
+                    remove 1 melon from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 850 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c수박이 없습니다!"
+            if clicked slot is 31:
+                if player has 1 cocoa beans:
+                    remove 1 cocoa beans from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 550 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c코코아콩이 없습니다!"
+            if clicked slot is 32:
+                if player has 1 cookie:
+                    remove 1 cookie from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 2200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c쿠키가 없습니다!"
+        if clicked slot is 52:
+            play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+            set {_slot} to 10
+            set slot {_slot} of current inventory of player to air
+            loop 7 times:
+                set slot {_slot} of current inventory of player to air
+                add 1 to {_slot}
+            set {_slot} to 19
+            set slot {_slot} of current inventory of player to air
+            loop 7 times:
+                set slot {_slot} of current inventory of player to air
+                add 1 to {_slot}
+            set {_slot} to 28
+            loop 7 times:
+                set slot {_slot} of current inventory of player to air
+                add 1 to {_slot}
+            set slot 10 of current inventory of player to shiny shield named "&f[&e상점&f] &4중국산 방패" with lore "" and "&e&l가격: 12만 5천원" and "" and "&f[&6등급&f]&e&l: &a일반" and "" and "&f특수 능력 &e&l: &f무기를 왼손에 들고 있을 경우 35%%의 확률로 모든 공격을 방어합니다."
+            set slot 11 of current inventory of player to chest named "&e일반 무기 상자" with lore "" and "&e가격: 5만원" and "" and "&f확률" and "&e초급: 60%%" and "&a일반: 35%%" and "&b희귀: 5%%"
+            set slot 12 of current inventory of player to chest named "&b희귀 무기 상자" with lore "" and "&e가격: 20만원" and "" and "&f확률" and "&e초급: 20%%" and "&a일반: 60%%" and "&b희귀: 20%%"
+            set slot 13 of current inventory of player to chest named "&4&l전설 무기 상자" with lore "" and "&e가격: 95만원" and "" and "&f확률" and "&a일반: 20%%" and "&b희귀: 75%%" and "&4&l전설: 5%%"
+            set slot 46 of current inventory of player to ("MHF_ArrowLeft" parsed as offline player)'s skull named "이전 페이지"
+            set slot 52 of current inventory of player to orange glass pane named " "
+            set {%player%.s} to 1
+        else if {%player%.s} is 1:
+            if clicked slot is 10:
+                if {%uuid of player%.money} is smaller than 125000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 125000 from {%uuid of player%.money}
+                    give 1 of shiny shield named "&f[&e상점&f] &4중국산 방패" to player
+                    close player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &4중국산 방패"
+            if clicked slot is 11:
+                if {%uuid of player%.money} is smaller than 50000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 50000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 chest named "&e일반 무기 상자" with lore "" and "&f확률" and "&e초급: 60%%" and "&a일반: 35%%" and "&b희귀: 5%%" to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &e일반 무기 상자"
+            if clicked slot is 12:
+                if {%uuid of player%.money} is smaller than 200000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 200000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 chest named "&b희귀 무기 상자" with lore "" and "&f확률" and "&e초급: 20%%" and "&a일반: 60%%" and "&b희귀: 20%%" to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &b희귀 무기 상자"
+            if clicked slot is 13:
+                if {%uuid of player%.money} is smaller than 950000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 950000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 1 chest named "&4&l전설 무기 상자" with lore "" and "&f확률" and "&a일반: 20%%" and "&b희귀: 75%%" and "&4&l전설: 5%%" to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &4&l전설 무기 상자"
+            if clicked slot is 46:
+                play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                set slot 10 of current inventory of player to zombie head named "&a&l진품 좀비 머리" with lore "&e가격: 100만원"
+                set slot 11 of current inventory of player to shiny emerald named "&e[&f판매전용&e] &2에메랄드" with lore "" and "&e판매가: 1250원" and "" and "&e64개 판매가: 8만원"
+                set slot 12 of current inventory of player to shiny diamond named "&e[&f판매전용&e] &b다이아몬드" with lore "" and "&e판매가: 1000원" and "" and "&e64개 판매가: 6만 4천원"
+                set slot 13 of current inventory of player to shiny gold ingot named "&e[&f판매전용&e] &6금괴" with lore "" and "&e판매가: 650원" and "" and "&e64개 판매가: 4만 1천 600원"
+                set slot 14 of current inventory of player to raw gold named "&6금 원석" with lore "&e가격: 600원"
+                set slot 15 of current inventory of player to shiny iron ingot named "&e[&f판매전용&e] &f철괴" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+                set slot 16 of current inventory of player to raw iron named "&f철 원석" with lore "&e가격: 500원"
+                set slot 19 of current inventory of player to shiny paper named "&e&l대량상점 이용권" with lore "" and "&e가격: 12만 5천원" and "" and "&e&l대량상점 이용 가능"
+                set slot 20 of current inventory of player to shiny copper ingot named "&e[&f판매전용&e] &6구리 주괴" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+                set slot 21 of current inventory of player to shiny coal named "&e[&f판매전용&e] &9석탄" with lore "" and "&e판매가: 125원" and "" and "&e64개 판매가: 8천원"
+                set slot 22 of current inventory of player to shiny diamond block named "&e[&f판매전용&e] &2아무 광물 블록 팔기" with lore "" and "&e판매가능 품목: &2에메랄드 블록, &b다이아몬드 블록, &6금 블록, &f철 블록, &6&l구리 블록, &9석탄 블록" and "" and "&e64개 판매가: ?원"
+                set slot 23 of current inventory of player to shiny wheat named "&e[&f판매전용&e] &6밀" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+                set slot 24 of current inventory of player to shiny potato named "&e[&f판매전용&e] &e감자" with lore "" and "&e판매가: 450원" and "" and "&e64개 판매가: 2만 8천 800원"
+                set slot 25 of current inventory of player to shiny carrot named "&e[&f판매전용&e] &6당근" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+                set slot 28 of current inventory of player to shiny melon slice named "&e[&f판매전용&e] &a수박 조각" with lore "" and "&e판매가: 200원" and "" and "&e64개 판매가: 3만 5천 200원"
+                set slot 29 of current inventory of player to shiny pumpkin named "&e[&f판매전용&e] &e호박" with lore "" and "&e판매가: 750원" and "" and "&e64개 판매가: 4만 8천원"
+                set slot 30 of current inventory of player to shiny melon named "&e[&f판매전용&e] &a수박" with lore "" and "&e판매가: 825원" and "" and "&e64개 판매가: 5만 2천 800원"
+                set slot 31 of current inventory of player to shiny cocoa beans named "&e[&f판매전용&e] &6코코아 콩" with lore "" and "&e판매가: 550원" and "" and "&e64개 판매가: 3만 5천 200원"
+                set slot 32 of current inventory of player to shiny cookie named "&e[&f판매전용&e] &6쿠키" with lore "" and "&e판매가: 2200원" and "" and "&e64개 판매가: 14만 800원"
+                set slot 49 of current inventory of player to ("MrSnowDK" parsed as offline player)'s skull named "&e플레이어님의 현재 돈 : &6%{%uuid of player%.money}%원"
+                set slot 52 of current inventory of player to ("MHF_ArrowRight" parsed as offline player)'s skull named "다음 페이지"
+                set slot 46 of current inventory of player to orange glass pane named " "
+                set {%player%.s} to 0
+    else if name of event-inventory is "&e&l대량상점":
+        cancel event
+        if {%player%.s} is not 1:
+            if clicked slot is 10:
+                if player has 64 emerald:
+                    remove 64 emerald from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 80000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c에메랄드가 없습니다!"
+            if clicked slot is 11:
+                if player has 64 diamond:
+                    remove 64 diamond from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 64000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c다이아몬드가 없습니다!"
+            if clicked slot is 12:
+                if player has 64 gold ingot:
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    remove 64 gold ingot from player's inventory
+                    add 41600 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c금괴가 없습니다!"
+            if clicked slot is 13:
+                if {%uuid of player%.money} is smaller than 38400:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 38400 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 64 of raw gold to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &6금 원석 64개"
+            if clicked slot is 14:
+                if player has 64 iron ingot:
+                    remove 64 iron ingot from player's inventory
+                    add 35200 to {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c철괴가 없습니다!"
+            if clicked slot is 15:
+                if {%uuid of player%.money} is smaller than 32000:
+                    close player's inventory
+                    send "&c잔액이 부족합니다."
+                else:
+                    subtract 32000 from {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    give 64 of raw iron to player
+                    send "&a구매가 성공적으로 완료 되었습니다, 구매 품목: &f철 원석 64개"
+            if clicked slot is 16:
+                if player has 64 copper ingot:
+                    remove 64 copper ingot from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 28800 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c구리 주괴가 없습니다!"
+            if clicked slot is 19:
+                if player has 64 coal:
+                    remove 64 coal from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 8000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c석탄이 없습니다!"
+            if clicked slot is 20:
+                if player has 1 emerald block:
+                    remove 1 emerald block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 11500 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 diamond block:
+                    remove 1 diamond block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 9200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 gold block:
+                    remove 1 gold block from player's inventory
+                    add 5980 to {%uuid of player%.money}
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 iron block:
+                    remove 1 iron block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 5060 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 copper block:
+                    remove 1 copper block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 4140 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else if player has 1 coal block:
+                    remove 1 coal block from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 1150 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c광물 블록이 없습니다!"
+            if clicked slot is 21:
+                if player has 64 wheat:
+                    remove 64 wheat from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 48000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c밀이 없습니다!"
+            if clicked slot is 22:
+                if player has 64 potato:
+                    remove 64 potato from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 28800 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c감자가 없습니다!"
+            if clicked slot is 23:
+                if player has 64 carrot:
+                    remove 64 carrot from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 35200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c당근이 없습니다!"
+            if clicked slot is 24:
+                if player has 64 melon slice:
+                    remove 64 melon slice from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 12800 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c수박조각이 없습니다!"
+            if clicked slot is 25:
+                if player has 64 pumpkin:
+                    remove 64 pumpkin from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 48000 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c호박이 없습니다!"
+            if clicked slot is 28:
+                if player has 64 melon:
+                    remove 64 melon from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 54400 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c수박이 없습니다!"
+            if clicked slot is 29:
+                if player has 64 cocoa beans:
+                    remove 64 cocoa beans from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 35200 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c코코아콩이 없습니다!"
+            if clicked slot is 30:
+                if player has 64 cookie:
+                    remove 64 cookie from player's inventory
+                    play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+                    add 140800 to {%uuid of player%.money}
+                    send action bar "&a거래가 완료되었습니다. 현재 돈: %{%uuid of player%.money}%" to player
+                else:
+                    close player's inventory
+                    send "&c쿠키가 없습니다!"
+every 1 second:
+    loop all players:
+        if {%loop-player%.스코어보드} is true:
+            wipe loop-player's sidebar
+            set name of sidebar of loop-player to "&7&l[ &2&l감염된 세계 &7&l]"
+            set score "&7====================" in sidebar of loop-player to 15
+            set score "&7 > &e&l닉네임" in sidebar of loop-player to 14
+            set score " - %loop-player%" in sidebar of loop-player to 13
+            set score " " in sidebar of loop-player to 12
+            set score "&7 > &e&l소유한 돈" in sidebar of loop-player to 11
+            set score " - &e%{%uuid of loop-player%.money}%&f원" in sidebar of loop-player to 10
+            set score "    " in sidebar of loop-player to 9
+            if {%loop-player%.직업} contains "좀비":
+                set score "&7 > &e&l좀비 상태" in sidebar of loop-player to 8
+                set score " - &c&l%{%loop-player%.직업}%" in sidebar of loop-player to 7
+                set score "   " in sidebar of loop-player to 6
+            else:
+                set score "&7 > &e&l직업" in sidebar of loop-player to 8
+                set score " - &a&l%{%loop-player%.직업}%" in sidebar of loop-player to 7
+                set score "   " in sidebar of loop-player to 6
+            set score "&7 > &e&l접속자 수" in sidebar of loop-player to 5
+            set score " - &e&l%number of all players%/&a&l20&f명" in sidebar of loop-player to 4
+            set score "  " in sidebar of loop-player to 3
+            set score "      " in sidebar of loop-player to 2
+            set score "&e서버 업타임: &e%{uphour}%시간 %{upmin}%분 %{upsec}%초" in sidebar of loop-player to 1
+command 스코어보드:
+    trigger:
+        if {%player%.스코어보드} is not true:
+            set {%player%.스코어보드} to true
+            wipe player's sidebar
+            send "&a성공적으로 스코어보드를 켰습니다."
+        else:
+            set {%player%.스코어보드} to false
+            wipe player's sidebar
+            send "&a성공적으로 스코어보드를 &c껐습니다."
+on inventory close:
+    if name of event-inventory is "&e일반상점":
+        set {%player%.s} to 0
+command 이스터에그 [<string>]:
+    trigger:
+        if {cnt} is not set:
+            set {cnt} to 0
+        if arg-1 is not set:
+            send "이스터에그를 찾으셨나요? 그런건 없습니다!"
+            add 1 to {cnt}
+            if {cnt} is 5:
+                broadcast "&e%player%&c님이 진짜 이스터에그를 발견하였습니다!"
+                set {cnt} to 32767
+                loop all players:
+                    give 1 of shiny diamond named "&e이스터의 증표" with lore "&a사용 방법: 네더라이트 검과 대장장이 작업대에 조합" to loop-player
+        if arg-1 is "set":
+            if player is op:
+                set {cnt} to 0

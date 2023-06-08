@@ -1,0 +1,875 @@
+
+on join:
+	if {%player%.좀비} is not set:
+		set {%player%.좀비} to false
+	if {%player%.직업} is not set:
+		if {%player%.좀비} is false:
+			set {%player%.직업} to "생존자"
+		else:
+			set {%player%.직업} to "일반좀비"
+	if {%player%.접속} is not set:
+		execute console command "rantp %player%"
+		set {%player%.접속} to true
+on load:
+	if {좀비수} is not set:
+		set {좀비수} to 0
+	if {게임상태} is false:
+		set {좀비수} to 0
+	if {게임상태} is not set:
+		set {게임상태} to false
+	if {쿨다운} is not set:
+		set {쿨다운} to false
+	set {_wood} to material choice of every plank
+	
+on chat:
+	if {%player%.직업} is "일반좀비" or "귀신좀비" or "폭탄좀비" or "초월폭탄좀비" or "초월귀신좀비":
+		set message format to "&c[&f좀비&c] &6%player% : &f%message%"
+	if {%player%.직업} is "슈퍼좀비":
+		set message format to "&4&l[&f슈퍼좀비&4&l] &6%player% : &f%message%"
+	if {%player%.직업} is "광전사좀비":
+		set message format to "&4&l[&f광전사좀비&4&l] &6%player% : &f%message%"
+	else if {%player%.직업} is "기사" or "궁수" or "스파르타" or "광부" or "성직자" or "생존자" or "성기사":
+		set message format to "&6[&f%{%player%.직업}%&6] &e%player% : &f%message%"
+on death:
+	if {%victim%.좀비} is false:
+		add 1 to {좀비수}
+		if attacker is player:
+			broadcast "&c%victim%님이 %attacker%님에 의해 감염되었습니다! 현재 좀비 수 : %{좀비수}%"
+			set {%victim%.좀비} to true
+			set {%victim%.직업} to "일반좀비"
+		else if attacker is entity:
+			set {%victim%.직업} to "폭탄좀비"
+			set {%victim%.좀비} to true
+			broadcast "&c%victim%님이 몬스터에 의해 감염되었습니다! 현재 좀비 수 : %{좀비수}%"
+		else:
+			broadcast "&c%victim%님이 귀신에게 감염되었습니다! 현재 좀비 수 : %{좀비수}%"
+			set {%victim%.직업} to "귀신좀비"
+			set {%victim%.좀비} to true
+	if {%victim%.직업} is "폭탄좀비":
+		spawn tnt
+		spawn tnt
+	if {%victim%.직업} is "초월폭탄좀비":
+		if attacker is player:
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+			spawn tnt at the attacker's location
+
+		else:
+			spawn tnt
+			spawn tnt
+			spawn tnt
+			spawn tnt
+			spawn tnt
+			spawn tnt
+	if {%victim%.직업} is "슈퍼좀비" or "광전사좀비":
+		drop 1 zombie head named "&c슈퍼좀비 &2&l%victim%&c의 머리"
+	if {%attacker%.직업} is "일반좀비" or "슈퍼좀비" or "귀신좀비" or "광전사좀비" or "초월폭탄좀비" or "초월귀신좀비":
+		if {%attacker%.직업} is "슈퍼좀비" or "광전사좀비":
+			if victim is entity:
+				chance of 2%:
+					give 1 of shiny paper named "&c&l좀비 각성권" to attacker
+			if victim is enderman:
+				chance of 5%:
+					give 1 of shiny iron sword with custom model data 1 named "&4&l좀비의 검" to attacker
+		else if {%attacker%.직업} is "귀신좀비":
+			if victim is not player:
+				chance of 5%:
+					give 1 of shiny iron sword with custom model data 3 named "&7&l귀신의 검" to attacker
+		else if {%attacker%.직업} is "초월귀신좀비":
+			if victim is not player:
+				chance of 5%:
+					give 1 of shiny iron sword with custom model data 4 named "&7&l초월 귀신의 검" to attacker
+
+			
+		else:
+			if victim is entity:
+				chance of 3%:
+					give 1 of shiny paper named "&c&l좀비 각성권" to attacker
+			if victim is enderman:
+				chance of 5%:
+					give 1 of shiny iron sword with custom model data 1 named "&4&l좀비의 검" to attacker
+	if {%victim%.직업} is "일반좀비" or "귀신좀비" or "폭탄좀비" or "초월폭탄좀비" or "초월귀신좀비":
+		if attacker is player:
+			chance of 45%:
+				drop 1 zombie head named "&c일반좀비 &2&l%victim%&c의 머리"
+		if victim is player:
+			if name of victim is "CIT-57fd7536e7af":
+				wait 301 seconds
+				execute console command "npc target 2 -a"
+			if name of victim is "CIT-9617c02d7e96":
+				wait 301 seconds
+				execute console command "npc target 3 -a"
+			
+	else if victim is player:
+		drop 1 ender chest named "&6플레이어 &f%victim%의 &e상자"
+		
+	
+
+on place of ender chest:
+	if name of player's tool contains "&e상자":
+		cancel event
+		remove 1 ender chest from player's tool
+		set {_rand} to random integer between 1 to 100
+		if {_rand} is between 1 and 30:
+			drop 20 coal
+		else if {_rand} is between 31 and 50:
+			drop 15 raw iron
+		else if {_rand} is between 51 and 71:
+			drop 10 raw gold
+		else if {_rand} is between 72 and 85:
+			drop 7 emeralds 
+		else if {_rand} is between 85 and 94:
+			drop 5 diamonds
+		else if {_rand} is between 95 and 100:
+			drop 5 netherite scrap
+every 3 seconds:
+	loop all players:
+		set tab header to "&2&l감염된 세계&f에 &e오신 것을 &a환영합니다!%nl%&e현재 시각: &f%now%%nl%&e----------------------------------------" and footer to  "&a----------------------------------------%nl%&e%loop-player%님의 &f현재 보유 액수 : &2&l%{%uuid of loop-player%.money}%&f원 %nl% %nl%&e%loop-player%님의 &f현재 상태 : &a%{%loop-player%.직업}%" for loop-player
+		if {%loop-player%.직업} is "일반좀비" or "슈퍼좀비" or "귀신좀비" or "폭탄좀비" or "광전사좀비" or "초월폭탄좀비" or "초월귀신좀비":
+			if {%loop-player%.직업} is "일반좀비":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of haste 1 to potion effects of loop-player
+				add potion effect of strength 1 to potion effects of loop-player
+				add potion effect of glowing 1 to potion effects of loop-player
+				set loop-player's max health to 10
+				
+			if {%loop-player%.직업} is "슈퍼좀비":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of strength 2 to potion effects of loop-player
+				add potion effect of glowing 1 to potion effects of loop-player
+				add potion effect of night vision to potion effects of loop-player
+				set loop-player's max health to 20
+			if {%loop-player%.직업} is "귀신좀비":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of Fire Resistance 4 to potion effects of loop-player
+				add potion effect of Water Breathing 4 to potion effects of loop-player
+				add potion effect of Slow Falling 1 to potion effects of loop-player
+				add potion effect of night vision to potion effects of loop-player
+				set loop-player's max health to 10
+			if {%loop-player%.직업} is "폭탄좀비":
+				add potion effect of Fire Resistance 3 to potion effects of loop-player
+				add potion effect of strength 1 to potion effects of loop-player
+				add potion effect of glowing 33 to potion effects of loop-player
+				set loop-player's max health to 5
+			if {%loop-player%.직업} is "광전사좀비":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of strength 2 to potion effects of loop-player
+				add potion effect of glowing 99 to potion effects of loop-player
+				add potion effect of fire Resistance 1 to potion effects of loop-player
+				add potion effect of night vision to potion effects of loop-player
+				set loop-player's max health to 30
+			if {%loop-player%.직업} is "초월폭탄좀비":
+				add potion effect of Fire Resistance 3 to potion effects of loop-player
+				add potion effect of strength 1 to potion effects of loop-player
+				add potion effect of speed 3 to potion effects of loop-player
+				add potion effect of glowing 33 to potion effects of loop-player
+				add potion effect of night vision to potion effects of loop-player
+				set loop-player's max health to 7
+			if {%loop-player%.직업} is "초월귀신좀비":
+				add potion effect of speed 2 to potion effects of loop-player
+				add potion effect of night vision to potion effects of loop-player
+				add potion effect of strength 1 to potion effects of loop-player
+				add potion effect of Dolphin's grace 1 to potion effects of loop-player
+				add potion effect of Fire Resistance 4 to potion effects of loop-player
+				add potion effect of Water Breathing 4 to potion effects of loop-player
+				set loop-player's max health to 15
+		
+command opcommands [<string>] [<player>]:
+	trigger:
+		if player is op:
+			if arg-1 is "좀비":
+				set {%player%.좀비} to false
+				send "&a성공적으로 좀비모드를 해제했습니다."
+				set {%player%.직업} to "생존자"
+				remove 1 from {좀비수}
+			if arg-1 is "초기화":
+				if arg-2 is set:
+					remove 1 from {좀비수}
+					set {게임상태} to false
+					set {%arg-2%.secret} to 0
+					set {%arg-2%.직업} to "생존자"
+					set {%arg-2%.좀비} to false
+					send "&a생존자가 되셨습니다." to arg-2
+				else:
+					remove 1 from {좀비수}
+					set {게임상태} to false
+					set {%player%.secret} to 0
+					set {%player%.직업} to "생존자"
+					set {%player%.좀비} to false
+					send "&a성공적으로 모든 설정을 초기화 했습니다."
+			if arg-1 is "지정":
+				if arg-2 is set:
+					if {%arg-2%.직업} is not "슈퍼좀비":
+						add 1 to {%arg-2%.secret}
+						if {%arg-2%.secret} is 5:
+							set {%arg-2%.직업} to "슈퍼좀비"
+							set {%arg-2%.좀비} to true
+							broadcast "&6%player%&f님이 &c&l%arg-2%&f님을 &4&l슈퍼좀비&f로 만들었습니다!"
+							play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at arg-2
+on rightclick with paper:
+	if name of player's tool is "&c&l좀비 각성권":
+		if {%player%.좀비} is true:
+			open chest inventory with 1 row named "&4&l좀비 각성권 GUI" to player
+			
+			set slot 0 of current inventory of player to redstone block named "&c슈퍼좀비로 각성" with lore "" and "&6능력 &f: 신속 I, 힘 II, 야간투시 I, 발광 I(공통) &4&l체력 15칸" and "" and "&6슈퍼좀비로 각성 될 확률 &f: 15%%" and "" and "&c이미 슈퍼좀비인 경우 각성할 수 없습니다."
+			set slot 1 of current inventory of player to phantom spawn egg named "&2귀신좀비로 각성" with lore "" and "&6능력 &f: 신속 II, 화염저항 IV, 수중호흡 IV, 느린낙하 I, &4&l체력 10칸" and "" and "&6귀신좀비로 각성 될 확률 &f: 65%%" and "" and "&c이미 귀신 좀비인 경우 각성할 수 없습니다."
+			set slot 2 of current inventory of player to tnt named "&7폭탄좀비로 각성" with lore "" and "&6능력 &f: 화염저항 III, 힘 I, 발광 I(공통) , &c&l사망시 폭탄 생성, &4&l체력 5칸" and "" and "&6폭탄좀비로 각성 될 확률 &f: 35%%" and "" and "&c이미 폭탄좀비인 경우 각성할 수 없습니다."
+			set slot 3 of current inventory of player to shiny barrier named "&c오픈 조건: 슈퍼좀비"
+			
+			set slot 4 of current inventory of player to barrier named "&c오픈 조건: 폭탄좀비"
+			set slot 5 of current inventory of player to barrier named "&d오픈 조건: 귀신좀비"
+			set slot 6 of current inventory of player to barrier named "&c개발중"
+			set slot 7 of current inventory of player to barrier named "&c개발중"
+			set slot 8 of current inventory of player to barrier named "&c개발중"
+			if {%player%.직업} is "폭탄좀비" or "초월폭탄좀비":
+				set slot 4 of current inventory of player to shiny tnt named "&7초월폭탄좀비로 각성" with lore "" and "&6능력 &f: 화염저항 III, 힘 II, 발광 I(공통) 신속 I, &c&l사망시 폭탄을 매우 많이 생성, &4&l체력 7칸" and "" and "&6초월 폭탄좀비로 각성 될 확률 &f: 7%%" and "" and "&c이미 초월 폭탄좀비인 경우 각성할 수 없습니다." and "&c폭탄좀비만 이 뽑기를 이용할 수 있습니다!"
+			if {%player%.직업} is "슈퍼좀비" or "광전사좀비":
+				set slot 3 of current inventory of player to netherite sword named "&c광전사 좀비로 각성" with lore "" and "&6능력 &f: 저항 I, 힘 II, 발광 I(공통),신속 II &4&l체력 25칸" and "" and "&6광전사로 각성 될 확률 &f: 8%%" and "" and "&c이미 광전사좀비인 경우 각성할 수 없습니다." and "&c슈퍼좀비만 이 뽑기를 이용할 수 있습니다!"
+			if {%player%.직업} is "귀신좀비" or "초월귀신좀비":
+				set slot 5 of current inventory of player to shiny phantom spawn egg named "&7초월귀신좀비로 각성" with lore "" and "&6능력 &f: 힘 I, 신속 II, 화염저항 IV, 수중호흡 IV, 돌고래의 가호 I, &4&l체력 15칸" and "" and "&6귀신좀비로 각성 될 확률 &f: 7%%" and "" and "&c이미 귀신 좀비인 경우 각성할 수 없습니다."
+on inventory click:
+	if name of event-inventory is "&4&l좀비 각성권 GUI":
+		if {%player%.좀비} is true:
+			cancel event
+			if {쿨다운} is false:
+				if clicked slot is 0:
+					if {%player%.직업} is not "슈퍼좀비":
+						remove 1 paper from player's tool
+						set {쿨다운} to true
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+						wait 1 second
+						set {_ran} to random integer between 1 to 100
+						if {_ran} is smaller than 16:
+							set {%player%.직업} to "슈퍼좀비"
+							set {%player%.좀비} to true
+							play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+							send "&a슈퍼좀비가 되셨습니다."
+							broadcast "&6%player%&f님이 &4&l슈퍼좀비&f가 되었습니다!"
+							close player's inventory
+						else if {_ran} is bigger than 15:
+							play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+							wait 20 ticks
+							send "&c슈퍼좀비로 각성에 실패하셨습니다!"
+							close player's inventory
+						set {쿨다운} to false
+				else if clicked slot is 1:
+					if {%player%.직업} is not "귀신좀비":
+						remove 1 paper from player's tool
+						set {쿨다운} to true
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+						wait 1 second
+						set {_ran} to random integer between 1 to 100
+						if {_ran} is smaller than 66:
+							set {%player%.직업} to "귀신좀비"
+							set {%player%.좀비} to true
+							play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+							send "&a귀신 좀비가 되셨습니다."
+							broadcast "&6%player%&f님이 &4&l귀신 좀비&f가 되었습니다!"
+							close player's inventory
+						else if {_ran} is bigger than 65:
+							play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+							wait 20 ticks
+							send "&c귀신 좀비로 각성에 실패하셨습니다!"
+							close player's inventory
+						set {쿨다운} to false
+				else if clicked slot is 2:
+					if {%player%.직업} is not "폭탄좀비":
+						remove 1 paper from player's tool
+						set {쿨다운} to true
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+						wait 1 second
+						play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+						wait 1 second
+						set {_ran} to random integer between 1 to 100
+						if {_ran} is smaller than 36:
+							set {%player%.직업} to "폭탄좀비"
+							set {%player%.좀비} to true
+							play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+							send "&a폭탄 좀비가 되셨습니다."
+							broadcast "&6%player%&f님이 &4&l폭탄 좀비&f가 되었습니다!"
+							close player's inventory
+						else if {_ran} is bigger than 35:
+							play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+							wait 20 ticks
+							send "&c폭탄 좀비로 각성에 실패하셨습니다!"
+							
+							close player's inventory
+						set {쿨다운} to false
+				else if clicked slot is 3:
+					if {%player%.직업} is "슈퍼좀비":
+						if {%player%.직업} is not "광전사좀비":
+							remove 1 paper from player's tool
+							set {쿨다운} to true
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+							wait 1 second
+							set {_ran} to random integer between 1 to 100
+							if {_ran} is smaller than 9:
+								set {%player%.직업} to "광전사좀비"
+								set {%player%.좀비} to true
+								play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+								send "&a광전사 좀비가 되셨습니다."
+								broadcast "&6%player%&f님이 &4&l광전사 좀비&f가 되었습니다!"
+								close player's inventory
+							else if {_ran} is bigger than 10:
+								
+								play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+								wait 20 ticks
+								send "&c광전사 좀비로 각성에 실패하셨습니다!"
+								close player's inventory
+							set {쿨다운} to false
+				else if clicked slot is 4:
+					if {%player%.직업} is "폭탄좀비":
+						if {%player%.직업} is not "초월폭탄좀비":
+							remove 1 paper from player's tool
+							set {쿨다운} to true
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+							wait 1 second
+							set {_ran} to random integer between 1 to 100
+							if {_ran} is smaller than 8:
+								set {%player%.직업} to "초월폭탄좀비"
+								set {%player%.좀비} to true
+								play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+								send "&a초월폭탄좀비가 되셨습니다."
+								broadcast "&6%player%&f님이 &5&l초월&4&l폭탄좀비&f가 되었습니다!"
+								close player's inventory
+							else if {_ran} is bigger than 7:
+								
+								play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+								wait 20 ticks
+								send "&c초월폭탄좀비로 각성에 실패하셨습니다!"
+								close player's inventory
+							set {쿨다운} to false
+				else if clicked slot is 5:
+					if {%player%.직업} is "귀신좀비":
+						if {%player%.직업} is not "초월귀신좀비":
+							remove 1 paper from player's tool
+							set {쿨다운} to true
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.25 at player
+							wait 1 second
+							play sound "BLOCK_NOTE_BLOCK_PLING" with volume 1 and pitch 1.75 at player
+							wait 1 second
+							set {_ran} to random integer between 1 to 100
+							if {_ran} is smaller than 8:
+								set {%player%.직업} to "초월귀신좀비"
+								set {%player%.좀비} to true
+								play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+								send "&a초월귀신좀비가 되셨습니다."
+								broadcast "&6%player%&f님이 &5&l초월&4&l귀신좀비&f가 되었습니다!"
+								close player's inventory
+							else if {_ran} is bigger than 7:
+								
+								play sound "block.anvil.destroy" with volume 1 and pitch 1 at player
+								wait 20 ticks
+								send "&c초월귀신좀비로 각성에 실패하셨습니다!"
+								close player's inventory
+							set {쿨다운} to false
+
+	if name of event-inventory is "&a&l생존자 직업 GUI":
+		cancel event
+		if {%player%.좀비} is false:
+			if clicked slot is 0:
+				if {%player%.직업} is not "기사":
+					if {%uuid of player%.money} is more than 750000:
+						set {%player%.직업} to "기사"
+						remove 750000 from {%uuid of player%.money}
+						play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+						close player's inventory
+						send "&a기사가 되셨습니다."
+			else if clicked slot is 1:
+				if {%player%.직업} is not "스파르타":
+					if {%uuid of player%.money} is more than 600000:
+						set {%player%.직업} to "스파르타"
+						remove 600000 from {%uuid of player%.money}
+						play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+						close player's inventory
+						send "&a스파르타가 되셨습니다."
+			else if clicked slot is 2:
+				if {%player%.직업} is not "궁수":
+					if {%uuid of player%.money} is more than 700000:
+						set {%player%.직업} to "궁수"
+						remove 700000 from {%uuid of player%.money}
+						play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+						close player's inventory
+						send "&a궁수가 되셨습니다."
+			else if clicked slot is 3:
+				if {%player%.직업} is not "광부":
+					if {%uuid of player%.money} is more than 835000:
+						set {%player%.직업} to "광부"
+						remove 835000 from {%uuid of player%.money}
+						play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+						close player's inventory
+						send "&a광부가 되셨습니다."
+			else if clicked slot is 4:
+				if {%player%.직업} is not "성직자":
+					if {%uuid of player%.money} is more than 1450000:
+						if player has 1 zombie head:
+							set {%player%.직업} to "성직자"
+							remove 1 zombie head from player's inventory
+							remove 1450000 from {%uuid of player%.money}
+							play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+							close player's inventory
+							send "&a성직자가 되셨습니다."
+			else if clicked slot is 5:
+				if {%player%.직업} is "기사":
+					if {%uuid of player%.money} is more than 1000000:
+						set {%player%.직업} to "성기사"
+						remove 1000000 from {%uuid of player%.money}
+						play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 at player
+						close player's inventory
+						send "&a성기사가 되셨습니다."
+
+
+on bed enter:
+	if {%player%.좀비} is true:
+		cancel event
+		send "&c좀비는 잘 수 없습니다."
+on place:
+	if type of player's tool is white bed or red bed or gray bed or light gray bed or yellow bed or green bed or lime bed or blue bed or pink bed:
+		if {%player%.좀비} is true:
+			cancel event
+			send "&c좀비는 침대를 설치할 수 없습니다!"
+every 4 seconds:
+	loop all players:
+		if {%loop-player%.좀비} is false:
+			if {%loop-player%.직업} is "스파르타":
+				add potion effect of fire Resistance 1 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 25
+			else if {%loop-player%.직업} is "광부":
+				add potion effect of haste 2 to potion effects of loop-player
+				add potion effect of fire Resistance 1 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 12
+			else if {%loop-player%.직업} is "기사":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of Resistance 1 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 15
+			else if {%loop-player%.직업} is "궁수":
+				add potion effect of speed 1 to potion effects of loop-player
+				add potion effect of Weakness 2 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 15
+			else if {%loop-player%.직업} is "성직자":
+				add potion effect of speed 2 to potion effects of loop-player
+				add potion effect of haste 1 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 13
+			else if {%loop-player%.직업} is "생존자":
+				add potion effect of night vision 1 to potion effects of loop-player
+				set loop-player's max health to 10
+			else if {%loop-player%.직업} is "성기사":
+				add potion effect of speed 2 to potion effects of loop-player
+				add potion effect of Resistance 2 to potion effects of loop-player
+				add potion effect of night vision 1 to potion effects of loop-player
+				add potion effect of regeneration 1 to potion effects of loop-player
+				set loop-player's max health to 25
+on damage:
+	if attacker is player:
+		if {%attacker%.직업} is not "일반좀비" or "귀신좀비" or "폭탄좀비" or "슈퍼좀비" or "광전사좀비" or "초월폭탄좀비" or "초월귀신좀비":
+			if {%attacker%.직업} is "기사":
+				if name of attacker's tool is "&6&l기사의 &f&l검":
+					set damage to damage*2.25
+					send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+				if type of attacker's tool is bow or crossbow:
+					set damage to damage*0.55
+					send "&6[&f직업&6]&f 데미지가 &c감소 &f되었습니다. 현재 데미지 : &6%damage%" to attacker
+			if {%attacker%.직업} is "궁수":
+				if type of attacker's tool is bow or crossbow:
+					if name of attacker's tool is not "&7&l궁수의 &f활":
+						set damage to damage*2.14
+						send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+					else if name of attacker's tool is "&7&l궁수의 &f활":
+						set damage to damage*3.14
+						send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+
+			if {%attacker%.직업} is "스파르타":
+				if name of attacker's tool is "&c스&6파&c르&6타&c의 &7&l창":
+					set damage to damage*4.5
+					send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+			if {%attacker%.직업} is "성기사":
+				if name of attacker's tool is "&7&l[&2티어 I&f&l] &6&l성기사의 &f&l검":
+					set damage to 25.5
+					send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+				else if name of attacker's tool is "&7&l[&2티어 II&7&l] &6&l성기사의 &f&l검":
+					set damage to 32.5
+					send action bar "&6[&f무기&6]&f 데미지가 &a증가 &f되었습니다! 현재 데미지 : &6%damage%" to attacker
+					chance of 50%:
+						heal the attacker by 0.5
+			if {%attacker%.직업} is "성직자":
+				if name of attacker's tool is "&6[&a치료&6] &e성직자의 지팡이":
+					if victim is player:
+						if {%victim%.직업} contains "기사" or "궁수" or "스파르타" or "성직자" or "광부" or "생존자":
+							chance of 75%:
+								heal the victim by 1
+						else:
+							chance of 10%:
+								kill victim
+								wait 20 ticks
+								set {%victim%.직업} to "생존자"
+								broadcast "&a%attacker%&f님이 &c%victim%&f님을 생존자로 만들었습니다!"
+
+
+on damage:
+	if {%attacker%.직업} contains "좀비":
+		if name of attacker's tool is "&4&l좀비의 검":
+			set damage to damage*1.8
+			chance of 12.5%:
+				heal the attacker by 1.5
+		if {%attacker%.직업} is "귀신좀비":
+			if name of attacker's tool is "&7&l귀신의 검":
+				set damage to damage*1.75
+				chance of 10%:
+					heal the attacker by 1
+			else if name of attacker's tool is "&7&l초월 귀신의 검":
+				set damage to damage*2
+				chance of 45%:
+					add potion effect of Dolphin's grace 2 to potion effects of attacker
+				chance of 15%:
+					heal the attacker by 2
+	if victim is player:
+		if {%victim%.직업} is "일반좀비" or "슈퍼좀비" or "귀신좀비" or "폭탄좀비" or "광전사좀비" or "초월폭탄좀비" or "초월귀신좀비":
+			if attacker is not player:
+				if attacker is entity:
+					cancel event
+	if attacker is op:
+		if name of attacker's tool is "&4&lOP의 검":
+			set damage to damage*800000
+			send "%damage%" to attacker
+			
+			broadcast "&c%victim%&f님이 &e&lOP &4%attacker%&f님에게 &4&l철퇴&f를 맞았습니다!"
+
+on break:
+	if {%player%.직업} is "광부":
+		if name of player's tool is "&e&l광부의 &2&l곡괭이":
+			if event-block is diamond ore or deepslate diamond ore:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					add 500 to {%uuid of player%.money}
+					give 5 diamond to player
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 diamond to player
+					add 400 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 diamond to player
+					add 300 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 diamond to player
+					add 200 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is iron ore or deepslate iron ore:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					give 5 iron ingot to player
+					add 50 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 iron ingot to player
+					add 40 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 iron ingot to player
+					add 30 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 iron ingot to player
+					add 20 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is gold ore or deepslate gold ore:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					give 5 gold ingot to player
+					add 100 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 gold ingot to player
+					add 80 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 gold ingot to player
+					add 60 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 gold ingot to player
+					add 40 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is emerald ore or deepslate emerald ore:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					give 5 emerald to player
+					add 1000 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 emerald to player
+					add 800 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 emerald to player
+					add 600 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 emerald to player
+					add 400 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is coal ore or deepslate coal ore:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					give 5 coal to player
+					add 50 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 coal to player
+					add 40 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 coal to player
+					add 30 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 coal to player
+					add 20 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is ancient debris:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					clear drops
+					give 5 netherite scrap to player
+					add 1000 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					clear drops
+					give 4 netherite scrap to player
+					add 800 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					clear drops
+					give 3 netherite scrap to player
+					add 600 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					clear drops
+					give 2 netherite scrap to player
+					add 400 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			else if event-block is netherrack block:
+				set {_r} to random integer between 1 and 100
+				if {_r} is smaller than 3:
+					add 25 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 3 and 11:
+					add 20 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 11 and 31:
+					add 15 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+				else if {_r} is between 31 and 100:
+					add 10 to {%uuid of player%.money}
+					send action bar "&e광물을 캤더니 돈이 들어왔습니다. 현재 돈: %{%uuid of player%.money}%" to player
+			
+			
+			
+
+command 직업:
+	trigger:
+		if {%player%.직업} is "기사" or "궁수" or "스파르타" or "광부" or "성직자" or "생존자" or "성기사":
+			if {%player%.좀비} is false:
+				open chest inventory with 1 row named "&a&l생존자 직업 GUI" to player
+				set slot 0 of current inventory of player to shiny iron sword named "&f기사로 전직" with lore "" and "&6능력 &f: 신속 I, 저항 I, 기사의 검 사용 가능, &4&l체력 15칸" and "" and "&6전직 비용 &f: &6&l75만원" and "&c이미 기사인 경우 전직할 수 없습니다!"
+				set slot 1 of current inventory of player to shiny iron shovel named "&c스파르타로 전직" with lore "" and "&6능력 &f: 힘 II, 화염저항 I, &4&l체력 20칸,&f 스파르타의 창 사용 가능" and "" and "&6전직 비용 &f: &6&l60만원" and "&c이미 스파르타인 경우 전직할 수 없습니다!"
+				set slot 2 of current inventory of player to shiny bow named "&6궁수로 전직" with lore "" and "&6능력 &f: 신속 I, &c나약함 II, &f체력 15칸" and "" and "&6전직 비용 &f: &6&l70만원" and "&c이미 궁수인 경우 전직할 수 없습니다!"
+				set slot 3 of current inventory of player to shiny gold pickaxe named "&e광부로 전직" with lore "" and "&6능력 &f: 성급함 II, 힘 I, 화염저항 I, 광부의 곡괭이 사용 가능, &4&l체력 12칸" and "" and "&6전직 비용 &f: &6&l83만 5천원" and "&c이미 광부인 경우 전직할 수 없습니다!"
+				set slot 4 of current inventory of player to shiny blaze rod named "&a성직자로 전직" with lore "" and "&6능력 &f: 재생 II, 신속 II, 성급함 I, 성직자의 지팡이 사용 가능, &4&l체력 13칸" and "" and "&6전직 비용 &f: &6&l 145만원" and "&c이미 성직자인 경우 전직할 수 없습니다!"
+				set slot 5 of current inventory of player to barrier named "&c오픈 조건: 기사"
+				set slot 6 of current inventory of player to barrier named "&c개발중"
+				set slot 7 of current inventory of player to barrier named "&c개발중"
+				set slot 8 of current inventory of player to barrier named "&c개발중"
+				if {%player%.직업} is "기사" or "성기사":
+					set slot 5 of current inventory of player to shiny iron sword with custom model data 2 named "&6성기사로 초월" with lore "" and "&6능력 &f: 재생 I, 신속 II, 저항 II, &4&l체력 25칸, &f성기사의 검 티어 I,II사용 가능(특별 리소스팩)" and "" and "&6진급 비용 &f:&6&l100만원"
+command rantp [<player>]:
+	trigger:
+		if player is op:
+			if arg-1 is not set:
+				loop all players:
+					set {_ran} to random integer between -1499 and 1499
+					set {_ran1} to random integer between -1499 and 1499
+					execute console command "tp %loop-player% %{_ran}% 140 %{_ran1}%"
+					add potion effect of Slow Falling 1 to potion effects of loop-player
+			else:
+				set {_ran} to random integer between -1499 and 1499
+				set {_ran1} to random integer between -1499 and 1499
+				execute console command "tp %arg-1% %{_ran}% 140 %{_ran1}%"
+				add potion effect of Slow Falling 1 to potion effects of arg-1
+
+command opgive [<string>]:
+	trigger:
+		if player is op:
+			if arg-1 is "trident":
+				give 1 of shiny iron shovel with custom model data 7 named "&c스&6파&c르&6타&c의 &7&l창" to player
+			if arg-1 is "pickaxe":
+				give 1 of shiny netherite pickaxe named "&e&l광부의 &2&l곡괭이" to player
+			if arg-1 is "sword":
+				give 1 of shiny iron sword named "&6&l기사의 &f&l검" to player
+			if arg-1 is "paper":
+				give 1 of shiny paper named "&c&l좀비 각성권" to player
+			if arg-1 is "bow":
+				give 1 of shiny bow with custom model data 5 named "&7&l궁수의 &f활" to player
+			if arg-1 is "opsword":
+				give 1 of shiny netherite sword named "&4&lOP의 검" to player
+			if arg-1 is "zombie":
+				give 1 of shiny iron sword with custom model data 1 named "&4&l좀비의 검" to player
+			if arg-1 is "castle":
+				give 1 of shiny iron sword with custom model data 2 named "&7&l[&2티어 I&f&l] &6&l성기사의 &f&l검" to player
+			if arg-1 is "ghost":
+				give 1 of shiny iron sword with custom model data 3 named "&7&l귀신의 검" to player
+			if arg-1 is "evolved":
+				give 1 of shiny iron sword with custom model data 4 named "&7&l초월 귀신의 검" to player
+			if arg-1 is "knight":
+				give 1 of shiny iron sword with custom model data 6 named "&7&l[&2티어 II&7&l] &6&l성기사의 &f&l검" to player
+			if arg-1 is "rod":
+				give 1 of shiny blaze rod with custom model data 1234 named "&6[&a치료&6] &e성직자의 지팡이" to player
+			if arg-1 is "cr":
+				give 1 of shiny conduit named "&b&l기사의 결정체" to player
+			if arg-1 is "chest":
+				give 32 of chest named "&6광&a물&f상자" to player
+			if arg-1 is "cry":
+				give 1 of shiny blaze rod with custom model data 134 named "&4&l기사의 훈장" to player
+on item damage:
+	if name of player's tool is "&6&l기사의 &f&l검" or "&e&l광부의 &2&l곡괭이" or "&c스&6파&c르&6타&c의 &7&l창" or "&7&l궁수의 &f활" or "&4&l좀비의 검" or "&7&l[&2티어 I&f&l] &6&l성기사의 &f&l검" or "&7&l[&2티어 II&7&l] &6&l성기사의 &f&l검" or "&7&l귀신의 검" or "&7&l초월귀신의 검":
+		cancel event
+on rightclick on enchanting table:
+	if player is not op:
+		cancel event
+		send "&c이용이 금지된 아이템입니다."
+on rightclick on anvil or Chipped anvil or damaged anvil:
+	if player is not op:
+		cancel event
+		send "&c이용이 금지된 아이템입니다."
+on death of wither or ender dragon:
+	if victim is ender dragon:
+		if attacker is player:
+			broadcast "&a%attacker%&e님이 &5엔드&f를 해방시켰습니다!"
+	else:
+		if attacker is player:
+			broadcast "&a%attacker%&e님이 &4네더&f를 정복하셨습니다!"
+command setname [<string>]:
+	trigger:
+		if arg-1 is not set:
+			send "&c이름을 지정해 주세요."
+		else:
+			if player is not op:
+				send "&cop만 사용 가능한 명령어입니다."
+			else:
+				if type of player's tool is air:
+					send "&c도구를 들어주세요."
+				else:
+					set name of player's tool to colored arg-1
+					send "%colored arg-1%&f로 이름이 변경되었습니다!"
+command setlore [<string>]:
+	trigger:
+		if arg-1 is not set:
+			send "&c설명을 지정해 주세요."
+		else:
+			if player is not op:
+				send "&cop만 사용 가능한 명령어입니다."
+			else:
+				if type of player's tool is air:
+					send "&c도구를 들어주세요."
+				else:
+					set lore of player's tool to colored arg-1
+					send "%colored arg-1%&f로 설명이 변경되었습니다!"
+
+command copyitem:
+	trigger:
+		if player is op:
+			if player's tool is not air:
+				set {_type} to type of player's tool
+				set {_name} to colored name of player's tool
+				give 1 of {_type} named {_name} to player
+				send "&a복사가 성공적으로 완료 되었습니다."
+			else:
+				send "&c복사에 실패했습니다."
+command 지역:
+	trigger:
+		if player is op:
+			send "&c비밀상점 좌표: &f155 75 -1479"
+command checkname:
+	trigger:
+		send "%type of player's tool%"
+command setblock:
+	trigger:
+		if player is op:
+			set {b} to player's tool
+			send "%{b}%"
+command glow:
+	trigger:
+		if player is op:
+			set {_i} to type of player's tool
+			set {_n} to name of player's tool
+			set player's tool to air
+			give 1 of shiny {_i} named "%{_n}%" to player
+command shop:
+	trigger:
+		set {%player%.loc} to player's location
+		play sound "ENTITY_PLAYER_LEVELUP" with volume 1 and pitch 1 at player
+		teleport player to location(9,81,-3, world("world"))
+		send "&a상점으로 워프에 성공했습니다. 원래 위치로 돌아가시려면 &f/back&a을 입력해 주십시오."
+command back:
+	trigger:
+		if {%player%.loc} is set:
+			teleport player to {%player%.loc}
+			delete {%player%.loc}
+			send "&a원래 위치로 돌아왔습니다."
+command hanwha:
+	trigger:
+		if {%player%.한화} is not true:
+			add 5000 to {%uuid of player%.money}
+			set {%player%.한화} to true
+			send "&a정착 지원금 &e5000원이 지급되었습니다."

@@ -1,0 +1,19 @@
+command 수표 [<integer>]:
+    trigger:
+        if arg-1 is not set:
+            send "&c금액을 설정해 주세요."
+        else:
+            if {%uuid of player%.money} is smaller than arg-1:
+                send "&c잔액이 부족합니다."
+            else:
+                remove arg-1 from {%uuid of player%.money}
+                give 1 of shiny paper named "%arg-1%원 수표" to player
+                send "&a수표가 정상적으로 발행 되었습니다."
+on click with paper:
+    if name of player's tool contains "수표":
+        set {_n} to uncolored name of player's tool
+        replace all "원" and "수표" and " " with "" in {_n}
+        set {_n} to {_n} parsed as integer
+        add {_n} to {%uuid of player%.money}
+        send "&a정상적으로 처리되었습니다. &f현재 돈 &e&l: &6%{%uuid of player%.money}%&f원"
+        remove 1 paper from player's tool
