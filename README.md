@@ -1,1 +1,1 @@
-## Steve's Minecraft Skriptno
+## Steve's Minecraft Skript
